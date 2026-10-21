@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/widgets/custom_button.dart';
+import '../../core/widgets/server_config_dialog.dart';
 import '../../shared/providers.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -59,6 +60,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Account'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.dns_rounded),
+            tooltip: 'Server Settings',
+            onPressed: () => ServerConfigDialog.show(context),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Center(

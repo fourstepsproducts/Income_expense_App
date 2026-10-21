@@ -5,6 +5,7 @@ import '../../core/config/api_config.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/confirmation_dialog.dart';
+import '../../core/widgets/server_config_dialog.dart';
 import '../../shared/providers.dart';
 import '../categories/categories_screen.dart';
 
@@ -86,49 +87,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _openServerUrlConfig() {
-    final controller = TextEditingController(text: ApiConfig.baseUrl);
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: const Text('Server API URL', style: TextStyle(color: AppColors.textPrimary)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Set the REST API endpoint (e.g. for Android emulator use http://10.0.2.2:5000/api)',
-              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: controller,
-              decoration: const InputDecoration(labelText: 'API Base URL'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              await ApiConfig.resetBaseUrl();
-              if (mounted) setState(() {});
-            },
-            child: const Text('Reset Default', style: TextStyle(color: AppColors.textSecondary)),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final newUrl = controller.text.trim();
-              Navigator.pop(ctx);
-              await ApiConfig.setCustomBaseUrl(newUrl);
-              if (mounted) setState(() {});
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
+    ServerConfigDialog.show(context, onSaved: () {
+      if (mounted) setState(() {});
+    });
   }
 
   Future<void> _logout() async {
