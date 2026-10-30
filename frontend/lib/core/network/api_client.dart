@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -7,6 +8,7 @@ import '../constants/app_constants.dart';
 import '../errors/app_exception.dart';
 
 class ApiClient {
+  static const Duration _defaultTimeout = Duration(seconds: 15);
   final http.Client _client = http.Client();
 
   Future<String?> getAccessToken() async {
@@ -46,7 +48,7 @@ class ApiClient {
   Future<dynamic> get(String endpoint, {Map<String, dynamic>? queryParams}) async {
     return _sendWithRetry((token) async {
       final uri = _buildUri(endpoint, queryParams);
-      final response = await _client.get(uri, headers: _buildHeaders(token));
+      final response = await _client.get(uri, headers: _buildHeaders(token)).timeout(_defaultTimeout);
       return _processResponse(response);
     });
   }
@@ -58,7 +60,7 @@ class ApiClient {
         uri,
         headers: _buildHeaders(token),
         body: body != null ? jsonEncode(body) : null,
-      );
+      ).timeout(_defaultTimeout);
       return _processResponse(response);
     });
   }
@@ -70,7 +72,7 @@ class ApiClient {
         uri,
         headers: _buildHeaders(token),
         body: body != null ? jsonEncode(body) : null,
-      );
+      ).timeout(_defaultTimeout);
       return _processResponse(response);
     });
   }
@@ -78,7 +80,7 @@ class ApiClient {
   Future<dynamic> delete(String endpoint) async {
     return _sendWithRetry((token) async {
       final uri = _buildUri(endpoint);
-      final response = await _client.delete(uri, headers: _buildHeaders(token));
+      final response = await _client.delete(uri, headers: _buildHeaders(token)).timeout(_defaultTimeout);
       return _processResponse(response);
     });
   }
@@ -119,6 +121,8 @@ class ApiClient {
       throw NetworkException();
     } on http.ClientException {
       throw NetworkException();
+    } on TimeoutException {
+      throw NetworkException('Request timed out. Please check your internet connection.');
     }
   }
 
@@ -132,7 +136,7 @@ class ApiClient {
         uri,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'refreshToken': rToken}),
-      );
+      ).timeout(_defaultTimeout);
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
