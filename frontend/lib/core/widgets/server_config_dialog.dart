@@ -56,7 +56,7 @@ class _ServerConfigDialogState extends State<ServerConfigDialog> {
       if (response.statusCode == 200) {
         setState(() {
           _testSuccess = true;
-          _testMessage = 'Connected! VPS Backend is reachable (HTTP 200 OK).';
+          _testMessage = 'Connected! Backend is reachable (HTTP 200 OK).';
         });
       } else {
         setState(() {
@@ -120,7 +120,7 @@ class _ServerConfigDialogState extends State<ServerConfigDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Configured VPS Backend (Port 5010):',
+              'Configured Backend URL:',
               style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
             ),
             const SizedBox(height: 12),
@@ -130,7 +130,7 @@ class _ServerConfigDialogState extends State<ServerConfigDialog> {
               children: [
                 ActionChip(
                   avatar: const Icon(Icons.cloud_done_rounded, size: 16, color: AppColors.incomeGreen),
-                  label: const Text('VPS Default (62.72.29.36:5010)', style: TextStyle(fontSize: 12)),
+                  label: const Text('Render Backend', style: TextStyle(fontSize: 12)),
                   backgroundColor: AppColors.surfaceElevated,
                   onPressed: () {
                     _urlController.text = ApiConfig.defaultBaseUrl;

@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiConfig {
-  // VPS Production/Central API Base URL
-  static const String defaultBaseUrl = 'http://62.72.29.36:5010/api';
+  // Render Production API Base URL
+  static const String defaultBaseUrl = 'https://income-expense-app-zif2.onrender.com/api';
 
   static const String _envApiUrl = String.fromEnvironment('API_URL');
   static const String _customUrlKey = 'custom_api_base_url';
